@@ -4,6 +4,9 @@
 start_time=$(date +%s)
 
 workspace=$(pwd)
+
+host_name="smo-nearrt-i"
+
 # Function to check internet connectivity
 check_internet() {
   echo "Checking internet connection..."
@@ -111,7 +114,8 @@ echo "Step 2: Cloning kubespray repository and editing k8s-cluster.yml"
 echo "==========================================================="
 git clone https://github.com/kubernetes-sigs/kubespray -b release-2.24 || handle_error 2
 cd kubespray || handle_error 2.1
-sed -i 's/kube_network_plugin: calico/kube_network_plugin: flannel/' ./inventory/local/group_vars/k8s_cluster/k8s-cluster.yml || handle_error 2.2
+sed -i 's/node1/'"$host_name"'/g' ./inventory/local/hosts.ini || handle_error 2.2
+sed -i 's/kube_network_plugin: calico/kube_network_plugin: flannel/' ./inventory/local/group_vars/k8s_cluster/k8s-cluster.yml || handle_error 2.3
 
 
 # Additional edit in Step 2
@@ -237,6 +241,8 @@ sed -i "s/^ *ricip:.*$/  ricip: \"$ip\"/" ric-dep/RECIPE_EXAMPLE/example_recipe_
 sed -i "s/^ *auxip:.*$/  auxip: \"$ip\"/" ric-dep/RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml || handle_error 14.2
 
 
+export DEBIAN_FRONTEND=noninteractive
+
 # Step 15: Install nfs-common
 echo "==========================================================="
 echo "Step 15: Install nfs-common..."
@@ -253,6 +259,8 @@ helm install nfs-release-1 stable/nfs-server-provisioner --namespace ricinfra   
 kubectl patch storageclass nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'   || handle_error 15.4 
 apt install -y nfs-common  || handle_error 15.5
 
+# Reset DEBIAN_FRONTEND
+unset DEBIAN_FRONTEND
 
 echo "==========================================================="
 echo "Step 16: Execute script to install O-RAN chart..."

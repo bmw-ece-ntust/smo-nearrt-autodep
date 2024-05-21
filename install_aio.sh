@@ -73,6 +73,7 @@ check_internet
 
 # Disable swap
 disable_swap
+
 export DEBIAN_FRONTEND=noninteractive
 # Update package repository and install aptitude
 echo "Updating package repository and installing aptitude..."
@@ -236,6 +237,7 @@ fi
 
 echo "Provided IP address: $ip"
 
+cd $workspace
 # Replace existing ricip and auxip values with provided IP
 sed -i "s/^ *ricip:.*$/  ricip: \"$ip\"/" ric-dep/RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml || handle_error 14.1
 sed -i "s/^ *auxip:.*$/  auxip: \"$ip\"/" ric-dep/RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml || handle_error 14.2

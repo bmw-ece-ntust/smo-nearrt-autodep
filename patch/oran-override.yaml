@@ -37,8 +37,8 @@ nonrtric:
   installNonrtricgateway: true
   installKong: false
   installORUApp: false
-  installODUSMOApp: true
-  installODUICSApp: true
+  installODUSMOApp: false
+  installODUICSApp: false
   installTopology: true
   installDmaapadapterservice: true
   installDmaapmediatorservice: true

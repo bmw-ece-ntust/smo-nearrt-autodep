@@ -89,11 +89,25 @@ echo "Step 1: Checking Python version"
 echo "==========================================================="
 python_version=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:3])))')
 required_version="3.10"
-if [ "$(printf '%s\n' "$required_version" "$python_version" | sort -V | head -n1)" != "$required_version" ]; then
-  echo "Python version is greater than 3.10. Continuing..."
+
+if [ "$(printf '%s\n' "$python_version" "$required_version" | sort -V | head -n 1)" != "$required_version" ]; then
+    echo "Python version is less than 3.10. Updating Python to version 3.10..."
+    sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
+    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 else
-  echo "Python version is not greater than 3.10. Installing Python3 and pip..."
-  apt install -y python3-pip || handle_error 1
+    echo "Python version is $python_version, which is greater than or equal to 3.10."
+fi 
+
+# Step 2: Check if pip3 is installed
+echo "==========================================================="
+echo "Step 2: Checking pip3 installation"
+echo "==========================================================="
+
+if command_exists pip3; then
+    echo "pip3 is already installed."
+else
+    echo "pip3 is not installed. Installing pip3..."
+    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 fi
 
 # Reset DEBIAN_FRONTEND

@@ -96,8 +96,10 @@ required_version="3.10"
 
 if [ "$(printf '%s\n' "$python_version" "$required_version" | sort -V | head -n 1)" != "$required_version" ]; then
     echo "Python version is less than 3.10. Updating Python to version 3.10..."
-    sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
-    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+    add-apt-repository ppa:deadsnakes/ppa -y
+    apt-get update
+    apt-get install -y python3.10 python3.10-venv python3.10-dev
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 else
     echo "Python version is $python_version, which is greater than or equal to 3.10."
 fi 

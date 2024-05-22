@@ -100,6 +100,9 @@ if [ "$(printf '%s\n' "$python_version" "$required_version" | sort -V | head -n 
     apt-get update
     apt-get install -y python3.10 python3.10-venv python3.10-dev
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+    cd /usr/lib/python3/dist-packages
+    matching_files=$(ls | grep "apt_pkg.cpython")
+    cp $matching_files apt_pkg.so
 else
     echo "Python version is $python_version, which is greater than or equal to 3.10."
 fi 

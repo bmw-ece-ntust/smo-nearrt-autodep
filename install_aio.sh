@@ -7,6 +7,10 @@ workspace=$(pwd)
 
 host_name="smo-nearrt-i"
 
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
 # Function to check internet connectivity
 check_internet() {
   echo "Checking internet connection..."

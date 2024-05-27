@@ -12,8 +12,14 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 host_name="smo-nearrt-i"
-read -p "Enter option (1.SMO Only; 2. NearRT Only; 3. SMO+NearRT ): " OPTION
-read -p "Enter IP address: " VM_IP
+read -p "Enter option (1.SMO Only; 2. NearRT Only; 3. SMO+NearRT ): " option
+if ! [[ $option =~ ^-?[0-9]+$ ]]; then
+    echo "Error: Argument is not an integer."
+    echo "Usage: $0 <integer>"
+    exit 1
+fi
+
+read -p "Enter IP address: " ip
 
 KUBEVERSION="1.28.10-1.1"
 HELMVERSION="3.14.2"
@@ -37,11 +43,11 @@ check_internet() {
 # Function to disable swap
 disable_swap() {
   echo "Disabling swap..."
-  sudo swapon --show > /dev/null 2>&1
+swapon --show > /dev/null 2>&1
   if [ $? -eq 0 ]; then
-    sudo swapoff -a
-    sudo rm /swapfile
-    sudo sed -i 's/\/swap.img/#\/swap.img/' /etc/fstab
+    swapoff -a
+    rm /swapfile
+    sed -i 's/\/swap.img/#\/swap.img/' /etc/fstab
   else
     echo "No swap is currently enabled."
   fi
@@ -82,10 +88,10 @@ check_ubuntu_version
 # Check internet connection
 check_internet
 
-# Disable swap
-disable_swap
+# # Disable swap
+# disable_swap
 
-# Script for Installing Docker,Kubernetes and Helm
+# # Script for Installing Docker,Kubernetes and Helm
 
 wait_for_pods_running () {
   NS="$2"
@@ -108,20 +114,24 @@ wait_for_pods_running () {
   done
 }
 
+option_1() {
 # Uninstalling existing Docker, Kubernetes
 echo "Uninstalling Docker,Kubernetes"
 kubeadm reset -f
-apt-get -y remove docker.io containerd
-sudo apt-get -y purge kubeadm kubectl kubelet kubernetes-cni kube* containerd
-sudo apt-get -y autoremove
-sudo rm -rf ~/.kube
+apt-get -y remove docker.io 
+ apt-get -y purge kubeadm kubectl kubelet kubernetes-cni kube* docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+ apt-get -y autoremove
+ rm -rf ~/.kube
 apt-get -y autoremove
 
+rm -rf /var/lib/docker
+rm -rf /var/lib/containerd
+rm -rf /etc/containerd
 
 # # Installing Docker
-# echo "****************************************************************************************************************"
-# echo "						Installing Docker						"
-# echo "****************************************************************************************************************"
+echo "****************************************************************************************************************"
+echo "						Installing CRI						"
+echo "****************************************************************************************************************"
 # apt-get install -y --allow-downgrades --allow-change-held-packages --allow-unauthenticated --ignore-hold docker.io=${DOCKERVERSION}
 # cat > /etc/docker/daemon.json <<EOF
 # {
@@ -139,55 +149,70 @@ apt-get -y autoremove
 # systemctl restart docker
 
 # Installing containerd
-modprobe overlay
-modprobe br_netfilter
+    modprobe overlay
+    modprobe br_netfilter
 
-cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+cat <<EOF |  tee /etc/modules-load.d/containerd.conf
 overlay
 br_netfilter
 EOF
 
-cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+cat <<EOF |  tee /etc/sysctl.d/99-kubernetes-cri.conf
 net.bridge.bridge-nf-call-iptables  = 1
 net.ipv4.ip_forward                 = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 EOF
 
-sysctl --system
-apt-get update 
-apt-get install -y containerd
-mkdir -p /etc/containerd
-containerd config default | sudo tee /etc/containerd/config.toml
-sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
-systemctl restart containerd
+# Add Docker's official GPG key:
+ apt-get update
+ apt-get install ca-certificates curl
+ install -m 0755 -d /etc/apt/keyrings
+ curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+ chmod a+r /etc/apt/keyrings/docker.asc
 
-# Helm Installation
-echo "****************************************************************************************************************"
-echo "						Installing Helm							"
-echo "****************************************************************************************************************"
-wget https://get.helm.sh/helm-v${HELMVERSION}-linux-amd64.tar.gz
-tar -xvf helm-v${HELMVERSION}-linux-amd64.tar.gz
-mv linux-amd64/helm /usr/local/bin/helm
-helm version
-rm  helm-v${HELMVERSION}-linux-amd64.tar.gz
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+   tee /etc/apt/sources.list.d/docker.list > /dev/null
+  apt-get update
+
+    sysctl --system
+    apt-get update 
+    apt-get install -y docker-ce docker-ce-cli containerd.io 
+    mkdir -p /etc/containerd
+    containerd config default |  tee /etc/containerd/config.toml
+    sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+    systemctl restart containerd
+
+    # Helm Installation
+    echo "****************************************************************************************************************"
+    echo "						Installing Helm							"
+    echo "****************************************************************************************************************"
+    wget https://get.helm.sh/helm-v${HELMVERSION}-linux-amd64.tar.gz
+    tar -xvf helm-v${HELMVERSION}-linux-amd64.tar.gz
+    mv linux-amd64/helm /usr/local/bin/helm
+    helm version
+    rm  helm-v${HELMVERSION}-linux-amd64.tar.gz
 
 
-# Installing Kubernetes Packages
-echo "***************************************************************************************************************"
-echo "						Installing Kubernetes						"
-echo "***************************************************************************************************************"
+    # Installing Kubernetes Packages
+    echo "***************************************************************************************************************"
+    echo "						Installing Kubernetes						"
+    echo "***************************************************************************************************************"
 
-rm /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg 
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list 
-apt update
+    rm /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key |  gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg 
+    echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' |  tee /etc/apt/sources.list.d/kubernetes.list 
+    apt update
+
 
 
 # Installing Kubectl, Kubeadm and kubelet
 
 apt install -y kubeadm=${KUBEVERSION} kubelet=${KUBEVERSION} kubectl=${KUBEVERSION}
-kubeadm init --apiserver-advertise-address=${VM_IP} --pod-network-cidr=10.244.0.0/16 --v=5
+kubeadm init --apiserver-advertise-address=${ip} --pod-network-cidr=10.244.0.0/16 --v=5
 
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -210,97 +235,27 @@ kubectl get pods -A
 echo "***************************************************************************************************************"
 
 
-# export DEBIAN_FRONTEND=noninteractive
-# # Update package repository and install aptitude
-# echo "Updating package repository and installing aptitude..."
-# apt-get update || { echo "Failed to update package repository. Exiting..."; exit 1; }
-# apt-get -y install aptitude || { echo "Failed to install aptitude. Exiting..."; exit 1; }
-# aptitude update || { echo "Failed to update package repository using aptitude. Exiting..."; exit 1; }
-# aptitude -y safe-upgrade || { echo "Failed to perform safe-upgrade using aptitude. Exiting..."; exit 1; }
 
 
-# # Step 1: Check Python version
-# echo "==========================================================="
-# echo "Step 1: Checking Python version"
-# echo "==========================================================="
-# python_version=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:3])))')
-# required_version="3.10"
+# Step x: Edit /etc/sysctl.conf to add fs.inotify.max_user_watches and fs.inotify.max_user_instances
+echo "==========================================================="
+echo "Step 2.1: Editing /etc/sysctl.conf..."
+echo "==========================================================="
+sysctl fs.inotify.max_user_watches=524288
+sysctl fs.inotify.max_user_instances=512
 
-# if [ "$(printf '%s\n' "$python_version" "$required_version" | sort -V | head -n 1)" != "$required_version" ]; then
-#     echo "Python version is less than 3.10. Updating Python to version 3.10..."
-#     add-apt-repository ppa:deadsnakes/ppa -y
-#     apt-get update
-#     apt-get install -y python3.10 python3.10-venv python3.10-dev
-#     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
-#     cd /usr/lib/python3/dist-packages
-#     matching_files=$(ls | grep "apt_pkg.cpython")
-#     cp $matching_files apt_pkg.so
-# else
-#     echo "Python version is $python_version, which is greater than or equal to 3.10."
-# fi 
+bash -c 'echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf'
+bash -c 'echo "fs.inotify.max_user_instances=512" >> /etc/sysctl.conf'
 
-# # Step 2: Check if pip3 is installed
-# echo "==========================================================="
-# echo "Step 2: Checking pip3 installation"
-# echo "==========================================================="
+# Step 5: Configure kubeconfig
+echo "==========================================================="
+echo "Step 5: Configuring kubeconfig"
+echo "==========================================================="
+mkdir -p "$HOME"/.kube/config
+cp /etc/kubernetes/admin.conf "$HOME"/.kube/config || handle_error 5
+}
 
-# if command_exists pip3; then
-#     echo "pip3 is already installed."
-# else
-#     echo "pip3 is not installed. Installing pip3..."
-#     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
-# fi
-
-# # Reset DEBIAN_FRONTEND
-# unset DEBIAN_FRONTEND
-
-# # Step x: Edit /etc/sysctl.conf to add fs.inotify.max_user_watches and fs.inotify.max_user_instances
-# echo "==========================================================="
-# echo "Step 2.1: Editing /etc/sysctl.conf..."
-# echo "==========================================================="
-# sysctl fs.inotify.max_user_watches=524288
-# sysctl fs.inotify.max_user_instances=512
-
-# bash -c 'echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf'
-# bash -c 'echo "fs.inotify.max_user_instances=512" >> /etc/sysctl.conf'
-
-# # Step 2: Clone kubespray repository and edit k8s-cluster.yml
-# echo "==========================================================="
-# echo "Step 2: Cloning kubespray repository and editing k8s-cluster.yml"
-# echo "==========================================================="
-# git clone https://github.com/kubernetes-sigs/kubespray -b release-2.24 || handle_error 2
-# cd kubespray || handle_error 2.1
-# sed -i 's/node1/'"$host_name"'/g' ./inventory/local/hosts.ini || handle_error 2.2
-# sed -i 's/kube_network_plugin: calico/kube_network_plugin: flannel/' ./inventory/local/group_vars/k8s_cluster/k8s-cluster.yml || handle_error 2.3
-
-
-# # Additional edit in Step 2
-# echo "==========================================================="
-# echo "Step 2.2: Editing all.yml"
-# echo "==========================================================="
-# sed -i 's/#\ upstream_dns_servers/upstream_dns_servers/g' ./inventory/sample/group_vars/all/all.yml || handle_error 2.3
-# sed -i 's/#\ \ \ -\ 8.8.8.8/ \ \ - 8.8.8.8/g' ./inventory/sample/group_vars/all/all.yml || handle_error 2.4
-# sed -i 's/#\ \ \ -\ 8.8.4.4/ \ \ - 8.8.4.4/g' ./inventory/sample/group_vars/all/all.yml || handle_error 2.5
-
-# # Step 3: Install requirements
-# echo "==========================================================="
-# echo "Step 3: Installing requirements"
-# echo "==========================================================="
-# pip install -r requirements.txt || handle_error 3
-
-# # Step 4: Run ansible playbook to deploy Kubernetes cluster
-# echo "==========================================================="
-# echo "Step 4: Running ansible playbook"
-# echo "==========================================================="
-# ansible-playbook -i inventory/local/hosts.ini --become --become-user=root cluster.yml || handle_error 4
-
-# # Step 5: Configure kubeconfig
-# echo "==========================================================="
-# echo "Step 5: Configuring kubeconfig"
-# echo "==========================================================="
-# mkdir -p "$HOME"/.kube/config
-# cp /etc/kubernetes/admin.conf "$HOME"/.kube/config || handle_error 5
-
+option_2(){
 # Step 6: Clone dep repository
 echo "==========================================================="
 echo "Step 6: Cloning dep repository"
@@ -356,83 +311,123 @@ kubectl get pods -n onap
 echo "Pods in nonrtric namespace:"
 kubectl get pods -n nonrtric
 
+}
 
-# # Step 6: Install RIC PLT
-# echo "==========================================================="
-# echo "Step 12: Installing RIC PLT..."
-# echo "==========================================================="
-# cd $workspace || handle_error 12.1
-# git clone "https://gerrit.o-ran-sc.org/r/ric-plt/ric-dep" || handle_error 12.2
-# cd ric-dep || handle_error 12.3
-# find -type f -print0 | xargs -0 sed -i 's\v1beta1\v1\g' || handle_error 12.4
+option_3(){
 
-# # Step 7: Replace files with patched versions
-# echo "==========================================================="
-# echo "Step 13: Replacing files with patched versions..."
-# echo "==========================================================="
-# patch_dir="$workspace/patch"
-# if [ -d "$patch_dir" ]; then
-#   cp "$patch_dir/ingress-a1mediator.yaml" helm/a1mediator/templates/ || handle_error 13.1
-#   cp "$patch_dir/ingress-appmgr.yaml" helm/appmgr/templates/ || handle_error 13.2
-#   cp "$patch_dir/ingress-e2mgr.yaml" helm/e2mgr/templates/ || handle_error 13.3
-# else
-#   echo "Error: Patch directory not found. Make sure you have the patched files in the 'patch' directory."
-#   exit 1
-# fi
+# Step 6: Install RIC PLT
+echo "==========================================================="
+echo "Step 12: Installing RIC PLT..."
+echo "==========================================================="
+cd $workspace || handle_error 12.1
+git clone "https://gerrit.o-ran-sc.org/r/ric-plt/ric-dep" || handle_error 12.2
+cd ric-dep || handle_error 12.3
+find -type f -print0 | xargs -0 sed -i 's\v1beta1\v1\g' || handle_error 12.4
 
-# # Step 8: Replace occurrences of $ip in example_recipe_oran_i_release.yaml with the provided IP
-# echo "==========================================================="
-# echo "Step 14: Updating example_recipe_oran_i_release.yaml with provided IP..."
-# echo "==========================================================="
-# ip="$1"  # Assuming the IP address is passed as the first argument to the script
-# if [ -z "$ip" ]; then
-#   echo "Error: No IP address provided."
-#   exit 1
-# fi
+# Step 7: Replace files with patched versions
+echo "==========================================================="
+echo "Step 13: Replacing files with patched versions..."
+echo "==========================================================="
+patch_dir="$workspace/patch"
+if [ -d "$patch_dir" ]; then
+  cp "$patch_dir/ingress-a1mediator.yaml" helm/a1mediator/templates/ || handle_error 13.1
+  cp "$patch_dir/ingress-appmgr.yaml" helm/appmgr/templates/ || handle_error 13.2
+  cp "$patch_dir/ingress-e2mgr.yaml" helm/e2mgr/templates/ || handle_error 13.3
+else
+  echo "Error: Patch directory not found. Make sure you have the patched files in the 'patch' directory."
+  exit 1
+fi
 
-# echo "Provided IP address: $ip"
+# Step 8: Replace occurrences of $ip in example_recipe_oran_i_release.yaml with the provided IP
+echo "==========================================================="
+echo "Step 14: Updating example_recipe_oran_i_release.yaml with provided IP..."
+echo "==========================================================="
+# Assuming the IP address is passed as the first argument to the script
+if [ -z "$ip" ]; then
+  echo "Error: No IP address provided."
+  exit 1
+fi
 
-# cd $workspace
-# # Replace existing ricip and auxip values with provided IP
-# sed -i "s/^ *ricip:.*$/  ricip: \"$ip\"/" ric-dep/RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml || handle_error 14.1
-# sed -i "s/^ *auxip:.*$/  auxip: \"$ip\"/" ric-dep/RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml || handle_error 14.2
+echo "Provided IP address: $ip"
+
+cd $workspace
+# Replace existing ricip and auxip values with provided IP
+sed -i "s/^ *ricip:.*$/  ricip: \"$ip\"/" ric-dep/RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml || handle_error 14.1
+sed -i "s/^ *auxip:.*$/  auxip: \"$ip\"/" ric-dep/RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml || handle_error 14.2
 
 
-# export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive
 
-# # Step 15: Install nfs-common
-# echo "==========================================================="
-# echo "Step 15: Install nfs-common..."
-# echo "==========================================================="
-# # Check if namespace 'ric-infra' exists
-# namespace="ricinfra"
-# if kubectl get namespace "$namespace" &> /dev/null; then
-#     echo "Namespace '$namespace' exists. Skipping steps..."
-# else
-#     kubectl create ns ricinfra  || handle_error 15.1
-# fi
-# helm repo add stable https://charts.helm.sh/stable   || handle_error 15.2
-# helm install nfs-release-1 stable/nfs-server-provisioner --namespace ricinfra    || handle_error 15.3
-# kubectl patch storageclass nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'   || handle_error 15.4 
-# apt install -y nfs-common  || handle_error 15.5
+# Step 15: Install nfs-common
+echo "==========================================================="
+echo "Step 15: Install nfs-common..."
+echo "==========================================================="
+# Check if namespace 'ric-infra' exists
+namespace="ricinfra"
+if kubectl get namespace "$namespace" &> /dev/null; then
+    echo "Namespace '$namespace' exists. Skipping steps..."
+else
+    kubectl create ns ricinfra  || handle_error 15.1
+fi
+helm repo add stable https://charts.helm.sh/stable   || handle_error 15.2
+helm install nfs-release-1 stable/nfs-server-provisioner --namespace ricinfra    || handle_error 15.3
+kubectl patch storageclass nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'   || handle_error 15.4 
+apt install -y nfs-common  || handle_error 15.5
 
-# # Reset DEBIAN_FRONTEND
-# unset DEBIAN_FRONTEND
+# Reset DEBIAN_FRONTEND
+unset DEBIAN_FRONTEND
 
-# echo "==========================================================="
-# echo "Step 16: Execute script to install O-RAN chart..."
-# echo "==========================================================="
+echo "==========================================================="
+echo "Step 16: Execute script to install O-RAN chart..."
+echo "==========================================================="
 
-# cd $workspace/ric-dep
-# sed -i '/kong:/,/^[[:space:]]*[^[:space:]]/{s/^\([[:space:]]*enabled:[[:space:]]*\)true$/\1false/}' helm/infrastructure/values.yaml || handle_error 16.1
-# cd bin || handle_error 16.2
-# ./install_common_templates_to_helm.sh || handle_error 16.2
-# ./install -f  ../RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml -c "jaegeradapter influxdb"  || handle_error 16.3
+cd $workspace/ric-dep
+sed -i '/kong:/,/^[[:space:]]*[^[:space:]]/{s/^\([[:space:]]*enabled:[[:space:]]*\)true$/\1false/}' helm/infrastructure/values.yaml || handle_error 16.1
+cd bin || handle_error 16.2
+./install_common_templates_to_helm.sh || handle_error 16.2
+./install -f  ../RECIPE_EXAMPLE/example_recipe_oran_i_release.yaml -c "jaegeradapter influxdb"  || handle_error 16.3
 
-# echo "==========================================================="
-# echo "Step 17: Execute script to install O-RAN chart..."
-# echo "==========================================================="
-# cd $workspace  || handle_error 17.1
-# helm repo add kong https://charts.konghq.com  || handle_error 17.2
-# helm repo update  || handle_error 17.3
-# helm install kong kong/kong -n ricplt -f patch/values.yaml  || handle_error 17.4
+
+}
+
+option_4(){
+echo "==========================================================="
+echo "Step 17: Execute script to install O-RAN chart..."
+echo "==========================================================="
+cd $workspace  || handle_error 17.1
+helm repo add kong https://charts.konghq.com  || handle_error 17.2
+helm repo update  || handle_error 17.3
+helm install kong kong/kong -n ricplt -f patch/values.yaml  || handle_error 17.4
+}
+
+case $option in
+    1)
+        option_1
+        option_2
+        option_4
+        ;;
+    2)
+        option_1
+        option_3
+        option_4
+        ;;
+    3)
+        option_1
+        option_2
+        option_3
+        option_4
+        ;;
+    *)
+        echo "Invalid option: $option"
+        echo "Valid options are: 1, 2, 3"
+        exit 1
+        ;;
+esac
+
+
+
+end_time=$(date +%s)
+elapsed=$(( end_time - start_time ))
+minutes=$(( elapsed / 60 ))
+seconds=$(( elapsed % 60 ))
+echo "Installation time: ${minutes} minutes and ${seconds} seconds"

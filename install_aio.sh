@@ -11,10 +11,16 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-host_name="smo-nearrt-i"
 read -p "Enter option (1.SMO Only; 2. NearRT Only; 3. SMO+NearRT ): " option
-if ! [[ $option =~ ^-?[0-9]+$ ]]; then
-    echo "Error: Argument is not an integer."
+if ! [[ $option =~ ^-?[1-3]+$ ]]; then
+    echo "Error: input is not an integer."
+    echo "Usage: $0 <integer>"
+    exit 1
+fi
+
+read -p "Have kubernetes installed? (1.Yes; 2. No;): " K8SISINSTALLED
+if ! [[ $K8SISINSTALLED =~ ^-?[1-2]+$ ]]; then
+    echo "Error: input is not an integer."
     echo "Usage: $0 <integer>"
     exit 1
 fi
@@ -89,7 +95,7 @@ check_ubuntu_version
 check_internet
 
 # # Disable swap
-# disable_swap
+disable_swap
 
 # # Script for Installing Docker,Kubernetes and Helm
 
@@ -114,14 +120,15 @@ wait_for_pods_running () {
   done
 }
 
-option_1() {
+
+option_installing_k8s(){
 # Uninstalling existing Docker, Kubernetes
 echo "Uninstalling Docker,Kubernetes"
 kubeadm reset -f
 apt-get -y remove docker.io 
- apt-get -y purge kubeadm kubectl kubelet kubernetes-cni kube* docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
- apt-get -y autoremove
- rm -rf ~/.kube
+apt-get -y purge kubeadm kubectl kubelet kubernetes-cni kube* docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+apt-get -y autoremove
+rm -rf ~/.kube
 apt-get -y autoremove
 
 rm -rf /var/lib/docker
@@ -400,19 +407,29 @@ helm repo update  || handle_error 17.3
 helm install kong kong/kong -n ricplt -f patch/values.yaml  || handle_error 17.4
 }
 
+case $K8SISINSTALLED in
+    1)
+            ;;
+    2)
+        option_installing_k8s
+            ;;
+    *)
+        echo "Invalid option: $K8SISINSTALLED"
+        echo "Valid options are: 1, 2"
+        exit 1
+        ;;
+esac
+
 case $option in
     1)
-        option_1
         option_2
         option_4
         ;;
     2)
-        option_1
         option_3
         option_4
         ;;
     3)
-        option_1
         option_2
         option_3
         option_4
@@ -423,7 +440,6 @@ case $option in
         exit 1
         ;;
 esac
-
 
 
 end_time=$(date +%s)

@@ -18,11 +18,11 @@ handle_error() {
 }
 
 
-# Step 6: Clone dep repository
+# Step 1: Clone dep repository
 echo "==========================================================="
-echo "Step 6: Cloning dep repository"
+echo "Step 1: Cloning dep repository"
 echo "==========================================================="
-cd "$workspace" || handle_error 6.1
+cd "$workspace" || handle_error 1
 git clone https://gerrit.o-ran-sc.org/r/it/dep.git -b master --recursive || handle_error 6.2
 
 # # Step 7: Setup charts museum
@@ -39,39 +39,39 @@ git clone https://gerrit.o-ran-sc.org/r/it/dep.git -b master --recursive || hand
 #   exit 1
 # fi
 
-# Step 7: Setup charts museum
+# Step 2: Setup charts museum
 echo "==========================================================="
-echo "Step 7: Setting up charts museum"
+echo "Step 2: Setting up charts museum"
 echo "==========================================================="
-./dep/smo-install/scripts/layer-0/0-setup-charts-museum.sh || handle_error 7
+./dep/smo-install/scripts/layer-0/0-setup-charts-museum.sh || handle_error 2
 
-# Step 7.5: Check running museum
+# Step 2.5: Check running museum
 echo "==========================================================="
-echo "Step 7: Setting up charts museum"
+echo "Step 2.5: Setting up charts museum"
 echo "==========================================================="
 ss -lptn 'sport = :18080' 
 
-# Step 8: Setup Helm3
+# Step 3: Setup Helm3
 echo "==========================================================="
-echo "Step 8: Setting up Helm3"
+echo "Step 3: Setting up Helm3"
 echo "==========================================================="
-./dep/smo-install/scripts/layer-0/0-setup-helm3.sh || handle_error 8
+./dep/smo-install/scripts/layer-0/0-setup-helm3.sh || handle_error 3
 
-# Step 9: Build all charts
+# Step 4: Build all charts
 echo "==========================================================="
-echo "Step 9: Building all charts"
+echo "Step 4: Building all charts"
 echo "==========================================================="
-./dep/smo-install/scripts/layer-1/1-build-all-charts.sh || handle_error 9
+./dep/smo-install/scripts/layer-1/1-build-all-charts.sh || handle_error 4
 
-# Step 10: Install ORAN
+# Step 5: Install ORAN
 echo "==========================================================="
-echo "Step 10: Installing ORAN"
+echo "Step 5: Installing ORAN"
 echo "==========================================================="
-./dep/smo-install/scripts/layer-2/2-install-oran.sh || handle_error 10
+./dep/smo-install/scripts/layer-2/2-install-oran.sh || handle_error 5
 
-# Step 11: Check pod status
+# Step 6: Check pod status
 echo "==========================================================="
-echo "Step 11: Checking pod status"
+echo "Step 6: Checking pod status"
 echo "==========================================================="
 echo "Pods in ONAP namespace:"
 kubectl get pods -n onap

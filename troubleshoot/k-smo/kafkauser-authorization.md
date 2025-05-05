@@ -20,12 +20,7 @@
 
 This may caused by java applications that consume too much CPU. The reason is due to error on onap-policy-clamp pods for authorization groups for all of onap-policy-clamp pods.
 
-#### 1.1 Step to reproduce
-- Install K8S vanilla
-- Install  K rel - [Commit: dfcfdbc9b540b3e6d401b8c09379e5a8b6267848](https://gerrit.o-ran-sc.org/r/gitweb?p=it/dep.git;a=commit;h=dfcfdbc9b540b3e6d401b8c09379e5a8b6267848)
-- Inspect `htop` or `top` after all pods deployed
-
-#### 1.2 Check pod logs
+#### 1.1 Check pod logs
 Within the error shows in logs, the pods are generating error message infinitely until the ephemeral storage full and caused pod to crash and error, then generated a new pod. This cycle loops infinitely.
 ```
 k logs onap-policy-clamp-ac-pf-ppnt-bfc679875-pjblm
@@ -38,7 +33,7 @@ org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to ac
 
 ```
 And this issue happens for pod `onap-policy-clamp-ac-pf-ppnt` `onap-policy-clamp-ac-kserve-ppnt` ` onap-policy-clamp-ac-a1pms-ppnt` `onap-policy-clamp-ac-http-ppnt` 
-### 1.3 Get kafkaUser
+### 1.2 Get kafkaUser
 Since its authorization for group, we check kafkaUser 
 ````
 kg ku policy-clamp-ac-pf-ppnt-ku  -o yaml
@@ -99,6 +94,10 @@ status:
   secret: policy-clamp-ac-pf-ppnt-ku
   username: policy-clamp-ac-pf-ppnt-ku
 ````
+## Step to reproduce
+- Install K8S vanilla
+- Install  K rel - [Commit: dfcfdbc9b540b3e6d401b8c09379e5a8b6267848](https://gerrit.o-ran-sc.org/r/gitweb?p=it/dep.git;a=commit;h=dfcfdbc9b540b3e6d401b8c09379e5a8b6267848)
+- Inspect `htop` or `top` after all pods deployed
 
 ## Workaround
 ### 1. Add group into kafkaUser

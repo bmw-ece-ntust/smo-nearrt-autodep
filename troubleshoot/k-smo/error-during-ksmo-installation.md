@@ -5,23 +5,31 @@
 * **Date:** Apr 30, 2025
 * **SMO Version:** 
     - K rel - [Commit: dfcfdbc9b540b3e6d401b8c09379e5a8b6267848](https://gerrit.o-ran-sc.org/r/gitweb?p=it/dep.git;a=commit;h=dfcfdbc9b540b3e6d401b8c09379e5a8b6267848)
-* **Installation Environment:** 
-    - Kubernetes 1.32.4
-    - Docker v.24
-* **Hardware Requirements:**
-    - vCPU 8
-    - Memory 24GB
-    - Storage 250GB
+## Environment Details
+
+* Operating System: Ubuntu 22.04
+* Kernel Version: `5.15.0-138-generic`
+* Kubernetes Version (if applicable): 
+    * `Client Version: v1.32.3`
+    * `Kustomize Version: v5.5.0`
+    * `Server Version: v1.32.4`
+* Helm Version (if applicable): `v3.12.3`
+* Network Configuration: CNI Flannel
+
+## Hardware Specification
+* vCPU 8
+* Memory 24GB
+* Storage 250GB
 
 ## Problem Details
-### 1.  **Some error output during installation**
-*  Description 
-    *  There are errors encountered during SMO installation using script execution. They are about permission and script bug. But they dont affect the installation outcome. 
-* Expected Outcome 
-    * No Error
-* Steps to reproduce
-    * Follow [Installation Guide - Dev Mode Installation](https://gerrit.o-ran-sc.org/r/gitweb?p=it/dep.git;a=blob;f=smo-install/README.md;h=5db20e2460a8bc101d6cabc8f83d9dd83858c547;hb=HEAD)
-    * Modify dep/smo-install/helm-override/default/oran-override.yaml
+### Some error output during installation
+#### Description 
+There are errors encountered during SMO installation using script execution. They are about permission and script bug. But they dont affect the installation outcome. 
+#### Expected Outcome 
+No Error
+#### Steps to reproduce
+- Follow [Installation Guide - Dev Mode Installation](https://gerrit.o-ran-sc.org/r/gitweb?p=it/dep.git;a=blob;f=smo-install/README.md;h=5db20e2460a8bc101d6cabc8f83d9dd83858c547;hb=HEAD)
+- Modify dep/smo-install/helm-override/default/oran-override.yaml
     ````
     # Copyright © 2017 Amdocs, Bell Canada
     # Mofification Copyright © 2021 AT&T
@@ -187,186 +195,184 @@
     ```
 
 - Installing ORAN NONRTRIC part
-```
-Error: open ../../helm-override/default/oran-override.yaml: permission denied
-../sub-scripts/install-nonrtric.sh: line 100: [: : integer expression expected
-````
+  ```
+  Error: open ../../helm-override/default/oran-override.yaml: permission denied
+  ../sub-scripts/install-nonrtric.sh: line 100: [: : integer expression expected
+  ````
 
 - Installing ORAN SMO part
 
-```
-namespace/smo created
-Installing SMO in release mode
-Error: INSTALLATION FAILED: failed pre-install: 1 error occurred:
-	* timed out waiting for the condition
+  ```
+  namespace/smo created
+  Installing SMO in release mode
+  Error: INSTALLATION FAILED: failed pre-install: 1 error occurred:
+    * timed out waiting for the condition
 
 
-Error: open ../../helm-override/default/oran-override.yaml: permission denied
-../sub-scripts/install-smo.sh: line 61: [: : integer expression expected
-```
-- Complete logs
-````
-Pre configuring SMO ...
-Error from server (AlreadyExists): namespaces "mariadb-operator" already exists
-"mariadb-operator" already exists with the same configuration, skipping
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "local" chart repository
-...Successfully got an update from the "strimzi" chart repository
-...Successfully got an update from the "mariadb-operator" chart repository
-...Successfully got an update from the "onap" chart repository
-Update Complete. ⎈Happy Helming!⎈
-Error: INSTALLATION FAILED: cannot re-use a name that is still in use
-Error: INSTALLATION FAILED: cannot re-use a name that is still in use
-deployment.apps/mariadb-operator condition met
-persistentvolume/mariadb-galera-pv unchanged
-SMO pre configuration done.
-Starting ONAP & NONRTRIC namespaces ...
-### Installing Strimzi Kafka Operator (Release Mode) ###
-"strimzi" already exists with the same configuration, skipping
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "local" chart repository
-...Successfully got an update from the "strimzi" chart repository
-...Successfully got an update from the "mariadb-operator" chart repository
-...Successfully got an update from the "onap" chart repository
-Update Complete. ⎈Happy Helming!⎈
-Error: INSTALLATION FAILED: cannot re-use a name that is still in use
-Waiting for Strimzi Kafka Operator to be ready...
-deployment.apps/strimzi-cluster-operator condition met
-### Installing ONAP part (Release Mode) ###
-"onap" already exists with the same configuration, skipping
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "local" chart repository
-...Successfully got an update from the "strimzi" chart repository
-...Successfully got an update from the "mariadb-operator" chart repository
-...Successfully got an update from the "onap" chart repository
-Update Complete. ⎈Happy Helming!⎈
-v3.12.3
-Use cache dir: /root/.local/share/helm/plugins/deploy/cache
-0
-0
-0
-0
-fetching onap/onap
-history.go:56: [debug] getting history for release onap
-install.go:200: [debug] Original chart version: ""
-install.go:217: [debug] CHART PATH: /root/.local/share/helm/plugins/deploy/cache/onap
+  Error: open ../../helm-override/default/oran-override.yaml: permission denied
+  ../sub-scripts/install-smo.sh: line 61: [: : integer expression expected
+  ```
+  - Complete logs
+  ````
+  Pre configuring SMO ...
+  Error from server (AlreadyExists): namespaces "mariadb-operator" already exists
+  "mariadb-operator" already exists with the same configuration, skipping
+  Hang tight while we grab the latest from your chart repositories...
+  ...Successfully got an update from the "local" chart repository
+  ...Successfully got an update from the "strimzi" chart repository
+  ...Successfully got an update from the "mariadb-operator" chart repository
+  ...Successfully got an update from the "onap" chart repository
+  Update Complete. ⎈Happy Helming!⎈
+  Error: INSTALLATION FAILED: cannot re-use a name that is still in use
+  Error: INSTALLATION FAILED: cannot re-use a name that is still in use
+  deployment.apps/mariadb-operator condition met
+  persistentvolume/mariadb-galera-pv unchanged
+  SMO pre configuration done.
+  Starting ONAP & NONRTRIC namespaces ...
+  ### Installing Strimzi Kafka Operator (Release Mode) ###
+  "strimzi" already exists with the same configuration, skipping
+  Hang tight while we grab the latest from your chart repositories...
+  ...Successfully got an update from the "local" chart repository
+  ...Successfully got an update from the "strimzi" chart repository
+  ...Successfully got an update from the "mariadb-operator" chart repository
+  ...Successfully got an update from the "onap" chart repository
+  Update Complete. ⎈Happy Helming!⎈
+  Error: INSTALLATION FAILED: cannot re-use a name that is still in use
+  Waiting for Strimzi Kafka Operator to be ready...
+  deployment.apps/strimzi-cluster-operator condition met
+  ### Installing ONAP part (Release Mode) ###
+  "onap" already exists with the same configuration, skipping
+  Hang tight while we grab the latest from your chart repositories...
+  ...Successfully got an update from the "local" chart repository
+  ...Successfully got an update from the "strimzi" chart repository
+  ...Successfully got an update from the "mariadb-operator" chart repository
+  ...Successfully got an update from the "onap" chart repository
+  Update Complete. ⎈Happy Helming!⎈
+  v3.12.3
+  Use cache dir: /root/.local/share/helm/plugins/deploy/cache
+  0
+  0
+  0
+  0
+  fetching onap/onap
+  history.go:56: [debug] getting history for release onap
+  install.go:200: [debug] Original chart version: ""
+  install.go:217: [debug] CHART PATH: /root/.local/share/helm/plugins/deploy/cache/onap
 
-release "onap" deployed
-release "onap-roles-wrapper" deployed
-release "onap-repository-wrapper" deployed
-release "onap-strimzi" deployed
-waiting for onap-strimzi-entity-operator to be deployed
-onap-strimzi-entity-operator not found. Retry 1/60
-onap-strimzi-entity-operator not found. Retry 2/60
-onap-strimzi-entity-operator not found. Retry 3/60
-onap-strimzi-entity-operator not found. Retry 4/60
-onap-strimzi-entity-operator not found. Retry 5/60
-onap-strimzi-entity-operator not found. Retry 6/60
-onap-strimzi-entity-operator not found. Retry 7/60
-onap-strimzi-entity-operator not found. Retry 8/60
-onap-strimzi-entity-operator not found. Retry 9/60
-onap-strimzi-entity-operator not found. Retry 10/60
-onap-strimzi-entity-operator not found. Retry 11/60
-onap-strimzi-entity-operator not found. Retry 12/60
-onap-strimzi-entity-operator not found. Retry 13/60
-onap-strimzi-entity-operator not found. Retry 14/60
-onap-strimzi-entity-operator not found. Retry 15/60
-onap-strimzi-entity-operator not found. Retry 16/60
-onap-strimzi-entity-operator found. Waiting for pod intialisation
-release "onap-strimzi" deployed
-release "onap-mariadb-galera" deployed
-release "onap-postgres" deployed
-release "onap-cps" deployed
-release "onap-dcaegen2-services" deployed
-release "onap-policy" deployed
-release "onap-repository-wrapper" deployed
-release "onap-roles-wrapper" deployed
-release "onap-sdnc" deployed
-Error from server (AlreadyExists): namespaces "nonrtric" already exists
-### Installing ORAN NONRTRIC part ###
-Installing NONRTRIC in release mode
-Error: INSTALLATION FAILED: cannot re-use a name that is still in use
-Error: open ../../helm-override/default/oran-override.yaml: permission denied
-../sub-scripts/install-nonrtric.sh: line 100: [: : integer expression expected
-/home/ubuntu/dep/nonrtric/servicemanager-preload /home/ubuntu/dep/smo-install/scripts/layer-2
-Preloading Service Manager from config-nonrtric.yaml
-Waiting for capifcore deployment
-Waiting for servicemanager deployment
-Waiting for kong deployment
-Find running services
-Service Manager preload completed for config-nonrtric.yaml
-Preloading Service Manager from config-smo.yaml
-Waiting for capifcore deployment
-Waiting for servicemanager deployment
-Waiting for kong deployment
-Find running services
-Service Manager preload completed for config-smo.yaml
-/home/ubuntu/dep/smo-install/scripts/layer-2
-### Installing ORAN SMO part ###
-namespace/smo created
-Installing SMO in release mode
-Error: INSTALLATION FAILED: failed pre-install: 1 error occurred:
-	* timed out waiting for the condition
+  release "onap" deployed
+  release "onap-roles-wrapper" deployed
+  release "onap-repository-wrapper" deployed
+  release "onap-strimzi" deployed
+  waiting for onap-strimzi-entity-operator to be deployed
+  onap-strimzi-entity-operator not found. Retry 1/60
+  onap-strimzi-entity-operator not found. Retry 2/60
+  onap-strimzi-entity-operator not found. Retry 3/60
+  onap-strimzi-entity-operator not found. Retry 4/60
+  onap-strimzi-entity-operator not found. Retry 5/60
+  onap-strimzi-entity-operator not found. Retry 6/60
+  onap-strimzi-entity-operator not found. Retry 7/60
+  onap-strimzi-entity-operator not found. Retry 8/60
+  onap-strimzi-entity-operator not found. Retry 9/60
+  onap-strimzi-entity-operator not found. Retry 10/60
+  onap-strimzi-entity-operator not found. Retry 11/60
+  onap-strimzi-entity-operator not found. Retry 12/60
+  onap-strimzi-entity-operator not found. Retry 13/60
+  onap-strimzi-entity-operator not found. Retry 14/60
+  onap-strimzi-entity-operator not found. Retry 15/60
+  onap-strimzi-entity-operator not found. Retry 16/60
+  onap-strimzi-entity-operator found. Waiting for pod intialisation
+  release "onap-strimzi" deployed
+  release "onap-mariadb-galera" deployed
+  release "onap-postgres" deployed
+  release "onap-cps" deployed
+  release "onap-dcaegen2-services" deployed
+  release "onap-policy" deployed
+  release "onap-repository-wrapper" deployed
+  release "onap-roles-wrapper" deployed
+  release "onap-sdnc" deployed
+  Error from server (AlreadyExists): namespaces "nonrtric" already exists
+  ### Installing ORAN NONRTRIC part ###
+  Installing NONRTRIC in release mode
+  Error: INSTALLATION FAILED: cannot re-use a name that is still in use
+  Error: open ../../helm-override/default/oran-override.yaml: permission denied
+  ../sub-scripts/install-nonrtric.sh: line 100: [: : integer expression expected
+  /home/ubuntu/dep/nonrtric/servicemanager-preload /home/ubuntu/dep/smo-install/scripts/layer-2
+  Preloading Service Manager from config-nonrtric.yaml
+  Waiting for capifcore deployment
+  Waiting for servicemanager deployment
+  Waiting for kong deployment
+  Find running services
+  Service Manager preload completed for config-nonrtric.yaml
+  Preloading Service Manager from config-smo.yaml
+  Waiting for capifcore deployment
+  Waiting for servicemanager deployment
+  Waiting for kong deployment
+  Find running services
+  Service Manager preload completed for config-smo.yaml
+  /home/ubuntu/dep/smo-install/scripts/layer-2
+  ### Installing ORAN SMO part ###
+  namespace/smo created
+  Installing SMO in release mode
+  Error: INSTALLATION FAILED: failed pre-install: 1 error occurred:
+    * timed out waiting for the condition
 
 
-Error: open ../../helm-override/default/oran-override.yaml: permission denied
-../sub-scripts/install-smo.sh: line 61: [: : integer expression expected
-NAME                                                READY   STATUS            RESTARTS   AGE
-mariadb-galera-0                                    1/1     Running           0          9m17s
-onap-cps-core-c86f49ccc-5sq6q                       1/1     Running           0          8m42s
-onap-cps-postgres-init-config-job-kcz67             0/1     Completed         0          8m42s
-onap-cps-temporal-5bb5654b67-vjcwf                  1/1     Running           0          8m42s
-onap-cps-temporal-db-0                              1/1     Running           0          8m42s
-onap-dcae-ves-collector-66f4dcb7d6-gr2n6            1/1     Running           0          8m38s
-onap-ncmp-dmi-plugin-577c47d5f5-6rnfb               0/1     PodInitializing   0          8m42s
-onap-nengdb-init-config-job-h9vz8                   0/1     PodInitializing   0          5m37s
-onap-network-name-gen-86b7d85754-fxkc9              0/1     Init:0/1          0          5m37s
-onap-policy-apex-pdp-5b44db6f4f-pz767               1/1     Running           0          7m6s
-onap-policy-api-747965d889-jkj7f                    0/1     Init:1/4          0          7m5s
-onap-policy-clamp-ac-a1pms-ppnt-7f684486ff-nmwzs    1/1     Running           0          7m6s
-onap-policy-clamp-ac-http-ppnt-65f55f8fb4-4g966     1/1     Running           0          7m5s
-onap-policy-clamp-ac-k8s-ppnt-6f96fc449-zzdl9       1/1     Running           0          7m5s
-onap-policy-clamp-ac-kserve-ppnt-7dc85f5c77-rsc66   1/1     Running           0          7m6s
-onap-policy-clamp-ac-pf-ppnt-556bc4c5b9-qss87       1/1     Running           0          7m5s
-onap-policy-clamp-runtime-acm-57d4c7bd9c-dvqpl      0/1     Init:0/2          0          7m6s
-onap-policy-opa-pdp-5ddb5d7b5-b5qrv                 0/1     Init:0/1          0          7m5s
-onap-policy-pap-6f94d8b78b-4lkb7                    0/1     Init:0/2          0          7m5s
-onap-policy-postgres-primary-7989878f4b-7c5xl       1/1     Running           0          7m6s
-onap-policy-postgres-replica-7496d54d7b-h8h2w       1/1     Running           0          7m5s
-onap-postgres-primary-5d6c89896d-clht7              1/1     Running           0          9m14s
-onap-postgres-replica-5488bb7f5d-tdsgt              1/1     Running           0          9m14s
-onap-sdnc-0                                         0/1     Init:1/3          0          5m37s
-onap-sdnc-ansible-server-5f7dcbc96c-pb7t9           0/1     Init:1/2          0          5m37s
-onap-sdnc-dbinit-job-cqmkl                          0/1     PodInitializing   0          5m37s
-onap-sdnc-dgbuilder-b5b498d75-976zx                 0/1     PodInitializing   0          5m37s
-onap-sdnc-sdnrdb-init-job-vdh2g                     0/1     Init:0/1          0          5m37s
-onap-sdnc-web-79b7874bd6-zx92v                      0/1     Init:0/1          0          5m37s
-onap-sdnrdb-coordinating-only-84b5c88677-ccm45      0/2     Init:1/3          0          5m37s
-onap-sdnrdb-master-0                                0/1     Init:1/2          0          5m37s
-onap-strimzi-entity-operator-7df978c897-z9rwf       2/2     Running           0          9m41s
-onap-strimzi-kafka-0                                1/1     Running           0          10m
-onap-strimzi-zookeeper-0                            1/1     Running           0          12m
-No resources found in nonrtric namespace.
-NAME                              READY   STATUS              RESTARTS   AGE
-keycloak-7db5c4dc7b-kr4lx         0/1     ContainerCreating   0          5m5s
-keycloak-init-hr488               0/1     ContainerCreating   0          5m4s
-keycloak-proxy-6c654c4bdc-dw6wz   0/1     ContainerCreating   0          5m5s
-NAME               STATUS   AGE
-default            Active   44m
-kube-flannel       Active   40m
-kube-node-lease    Active   44m
-kube-public        Active   44m
-kube-system        Active   44m
-mariadb-operator   Active   33m
-nonrtric           Active   30m
-onap               Active   12m
-smo                Active   5m22s
-strimzi-system     Active   32m
-`````
+  Error: open ../../helm-override/default/oran-override.yaml: permission denied
+  ../sub-scripts/install-smo.sh: line 61: [: : integer expression expected
+  NAME                                                READY   STATUS            RESTARTS   AGE
+  mariadb-galera-0                                    1/1     Running           0          9m17s
+  onap-cps-core-c86f49ccc-5sq6q                       1/1     Running           0          8m42s
+  onap-cps-postgres-init-config-job-kcz67             0/1     Completed         0          8m42s
+  onap-cps-temporal-5bb5654b67-vjcwf                  1/1     Running           0          8m42s
+  onap-cps-temporal-db-0                              1/1     Running           0          8m42s
+  onap-dcae-ves-collector-66f4dcb7d6-gr2n6            1/1     Running           0          8m38s
+  onap-ncmp-dmi-plugin-577c47d5f5-6rnfb               0/1     PodInitializing   0          8m42s
+  onap-nengdb-init-config-job-h9vz8                   0/1     PodInitializing   0          5m37s
+  onap-network-name-gen-86b7d85754-fxkc9              0/1     Init:0/1          0          5m37s
+  onap-policy-apex-pdp-5b44db6f4f-pz767               1/1     Running           0          7m6s
+  onap-policy-api-747965d889-jkj7f                    0/1     Init:1/4          0          7m5s
+  onap-policy-clamp-ac-a1pms-ppnt-7f684486ff-nmwzs    1/1     Running           0          7m6s
+  onap-policy-clamp-ac-http-ppnt-65f55f8fb4-4g966     1/1     Running           0          7m5s
+  onap-policy-clamp-ac-k8s-ppnt-6f96fc449-zzdl9       1/1     Running           0          7m5s
+  onap-policy-clamp-ac-kserve-ppnt-7dc85f5c77-rsc66   1/1     Running           0          7m6s
+  onap-policy-clamp-ac-pf-ppnt-556bc4c5b9-qss87       1/1     Running           0          7m5s
+  onap-policy-clamp-runtime-acm-57d4c7bd9c-dvqpl      0/1     Init:0/2          0          7m6s
+  onap-policy-opa-pdp-5ddb5d7b5-b5qrv                 0/1     Init:0/1          0          7m5s
+  onap-policy-pap-6f94d8b78b-4lkb7                    0/1     Init:0/2          0          7m5s
+  onap-policy-postgres-primary-7989878f4b-7c5xl       1/1     Running           0          7m6s
+  onap-policy-postgres-replica-7496d54d7b-h8h2w       1/1     Running           0          7m5s
+  onap-postgres-primary-5d6c89896d-clht7              1/1     Running           0          9m14s
+  onap-postgres-replica-5488bb7f5d-tdsgt              1/1     Running           0          9m14s
+  onap-sdnc-0                                         0/1     Init:1/3          0          5m37s
+  onap-sdnc-ansible-server-5f7dcbc96c-pb7t9           0/1     Init:1/2          0          5m37s
+  onap-sdnc-dbinit-job-cqmkl                          0/1     PodInitializing   0          5m37s
+  onap-sdnc-dgbuilder-b5b498d75-976zx                 0/1     PodInitializing   0          5m37s
+  onap-sdnc-sdnrdb-init-job-vdh2g                     0/1     Init:0/1          0          5m37s
+  onap-sdnc-web-79b7874bd6-zx92v                      0/1     Init:0/1          0          5m37s
+  onap-sdnrdb-coordinating-only-84b5c88677-ccm45      0/2     Init:1/3          0          5m37s
+  onap-sdnrdb-master-0                                0/1     Init:1/2          0          5m37s
+  onap-strimzi-entity-operator-7df978c897-z9rwf       2/2     Running           0          9m41s
+  onap-strimzi-kafka-0                                1/1     Running           0          10m
+  onap-strimzi-zookeeper-0                            1/1     Running           0          12m
+  No resources found in nonrtric namespace.
+  NAME                              READY   STATUS              RESTARTS   AGE
+  keycloak-7db5c4dc7b-kr4lx         0/1     ContainerCreating   0          5m5s
+  keycloak-init-hr488               0/1     ContainerCreating   0          5m4s
+  keycloak-proxy-6c654c4bdc-dw6wz   0/1     ContainerCreating   0          5m5s
+  NAME               STATUS   AGE
+  default            Active   44m
+  kube-flannel       Active   40m
+  kube-node-lease    Active   44m
+  kube-public        Active   44m
+  kube-system        Active   44m
+  mariadb-operator   Active   33m
+  nonrtric           Active   30m
+  onap               Active   12m
+  smo                Active   5m22s
+  strimzi-system     Active   32m
+  `````
 
-### 2. No TEIV installed
-*  Description 
-    *  TEIV is not installed eventhough its enabled in helm-override.yaml 
+- Check pods status
     ```
     NAMESPACE          NAME                                                READY   STATUS       RESTARTS       AGE
     kube-flannel       kube-flannel-ds-w74hm                               1/1     Running      0              150m
@@ -420,267 +426,25 @@ strimzi-system     Active   32m
     smo                keycloak-proxy-6c654c4bdc-dw6wz                     1/1     Running      3 (149m ago)   3h5m
     strimzi-system     strimzi-cluster-operator-686599c45d-p7ks8           1/1     Running      2 (147m ago)   3h32m
     ```
-* Expected Outcome 
-    * Has TEIV components installed and pods show within K8S cluster.
-* Steps to reproduce.
-    * Same as [here](#1-Some-error-output-during-installation)
 
-### 3. Evicted Pod for 
 
-```
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.857+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.858+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.858+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.859+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.859+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.860+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.860+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.861+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.861+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.862+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.862+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.862+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.862+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.863+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.863+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.864+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.864+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.864+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.864+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.865+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.865+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.866+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.866+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.866+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.866+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.867+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.867+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.868+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.868+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.869+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.869+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.870+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.870+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.873+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.873+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.877+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.877+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.878+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.878+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.879+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.879+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.879+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.879+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.880+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.880+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.881+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.881+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.883+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.883+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.884+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.884+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.884+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.884+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.887+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.887+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.890+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.890+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.890+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.890+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.891+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.891+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.891+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.891+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.893+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.893+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.894+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.895+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.896+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.896+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.897+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.897+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.897+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.897+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.898+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.898+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.899+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.899+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.900+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.900+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.900+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.900+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.901+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.901+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.903+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.904+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.905+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.905+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.905+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.905+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.906+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.906+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.906+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.906+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.908+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.908+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.909+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.910+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.911+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.911+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.911+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.912+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.912+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.912+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.913+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.913+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.915+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.915+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.916+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.916+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.919+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.919+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.920+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.921+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.921+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.921+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.922+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.922+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.923+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator request hit fatal exception
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.923+00:00|ERROR|SingleThreadedBusTopicSource|KAFKA-source-acm-ppnt-sync] SingleThreadedKafkaTopicSource [getTopicCommInfrastructure()=KAFKA, toString()=SingleThreadedBusTopicSource [consumerGroup=cb06db04-42bf-4859-bb6b-15e309620561, consumerInstance=onap-policy-clamp-ac-k8s-ppnt-6f96fc449-n46n5, fetchTimeout=15000, fetchLimit=-1, consumer=KafkaConsumerWrapper [fetchTimeout=15000], alive=true, locked=false, uebThread=Thread[KAFKA-source-acm-ppnt-sync,5,main], topicListeners=1, toString()=BusTopicBase [apiKey=null, apiSecret=null, useHttps=false, allowSelfSignedCerts=false, toString()=TopicBase [servers=[onap-strimzi-kafka-bootstrap:9092], topic=acm-ppnt-sync, effectiveTopic=acm-ppnt-sync, #recentEvents=0, locked=false, #topicListeners=1]]]]: cannot fetch
-org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: cb06db04-42bf-4859-bb6b-15e309620561
-[2025-05-01T02:00:08.924+00:00|INFO|ConsumerCoordinator|KAFKA-source-acm-ppnt-sync] [Consumer clientId=consumer-cb06db04-42bf-4859-bb6b-15e309620561-3, groupId=cb06db04-42bf-4859-bb6b-15e309620561] FindCoordinator reques
-```
-## Environment Details
 
-* Operating System: Ubuntu 22.04
-* Kernel Version: `5.15.0-138-generic`
-* Kubernetes Version (if applicable): 
-    * `Client Version: v1.32.3`
-    * `Kustomize Version: v5.5.0`
-    * `Server Version: v1.32.4`
-* Helm Version (if applicable): `v3.12.3`
-* Network Configuration: CNI Flannel
 
 ## Resolution
 
-N/A
+The issue occurs due to file permission `helm-override/default/oran-override.yaml` eventhough using superuser `root` it still cannot access the file.
 
+###  Permission is strict and belongs to `ubuntu` ownership. 
+```
+ubuntu@smolite:~/dep$ ls -l smo-install/helm-override/default/
+total 48
+-rw-rw-r-- 1 ubuntu ubuntu  1092 Apr 29 16:12 cicd-override.yaml
+-rw-rw-r-- 1 ubuntu ubuntu  2316 Apr 29 16:12 cicd-proxy-override.yaml
+-rw-rw-r-- 1 ubuntu ubuntu  1710 Apr 29 16:12 network-simulators-override.yaml
+-rw-rw-r-- 1 ubuntu ubuntu 14538 Apr 29 16:12 network-simulators-topology-override.yaml
+-rw-rw-r-- 1 ubuntu ubuntu  6191 Apr 29 16:12 onap-override.yaml
+-rw-rw-r-- 1 ubuntu ubuntu  5085 May  1 02:17 oran-override.yaml
+-rw-rw-r-- 1 ubuntu ubuntu   736 Apr 29 16:12 tests-override.yaml
+````
+
+The issue fixed by perform `git clone`  action under `root` with superuser. Therefore all files belongs to `root` and executed properly. The issue will be gone and installation should be completed. 

@@ -128,6 +128,8 @@ bash -c 'echo "fs.inotify.max_user_instances=512" >> /etc/sysctl.conf'
 bash -c 'echo "fs.inotify.max_queued_events=16384" >> /etc/sysctl.conf'
 bash -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 
+# Apply sysctl params without reboot
+sudo sysctl --system
 
 # # Installing Docker
 # echo "****************************************************************************************************************"
@@ -230,13 +232,3 @@ kubectl get pods -A
 
 echo "***************************************************************************************************************"
 
-
-# Step x: Edit /etc/sysctl.conf to add fs.inotify.max_user_watches and fs.inotify.max_user_instances
-echo "==========================================================="
-echo "Step 2.1: Editing /etc/sysctl.conf..."
-echo "==========================================================="
-
-bash -c 'echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf'
-bash -c 'echo "fs.inotify.max_user_instances=512" >> /etc/sysctl.conf'
-bash -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
-bash -c 'echo "fs.inotify.max_queued_events=16384" >> /etc/sysctl.conf'

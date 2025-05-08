@@ -34,6 +34,41 @@ check_internet() {
   fi
 }
 
+# Function to check if curl is installed and install if not
+check_and_install_curl() {
+  echo "Checking if curl is installed..."
+  if ! command_exists curl; then
+    echo "curl is not installed. Installing now..."
+    sudo apt update
+    sudo apt install -y curl
+    if command_exists curl; then
+      echo "curl has been successfully installed."
+    else
+      echo "Error: Failed to install curl. Please check your internet connection and try again."
+      exit 1
+    fi
+  else
+    echo "curl is already installed."
+  fi
+}
+
+# Function to check for existing Kubernetes cluster and prompt for removal
+check_existing_cluster() {
+  if command_exists kubectl && kubectl cluster-info &>/dev/null; then
+    read -p "Existing Kubernetes cluster found. Do you want to remove it? (y/N): " remove_cluster
+    if [[ "$remove_cluster" != "y" && "$remove_cluster" != "Y" ]]; then
+      echo "Kubernetes cluster removal skipped. Exiting script."
+      exit 0
+    fi
+    echo "Removing existing Kubernetes cluster..."
+    kubeadm reset -f
+    sudo apt-get -y purge kubeadm kubectl kubelet kubernetes-cni kube* containerd
+    sudo apt-get -y autoremove
+    sudo rm -rf ~/.kube
+    apt-get -y autoremove
+  fi
+}
+
 # Function to disable swap
 disable_swap() {
   echo "Disabling swap..."
@@ -82,6 +117,12 @@ check_ubuntu_version
 # Check internet connection
 check_internet
 
+# Check and install curl if not present
+check_and_install_curl
+
+# Check for existing Kubernetes cluster and prompt for removal
+check_existing_cluster
+
 # Disable swap
 disable_swap
 
@@ -107,16 +148,6 @@ wait_for_pods_running () {
     echo "> waiting for $NUMPODS/$1 pods running in namespace [$NS] with keyword [$KEYWORD]"
   done
 }
-
-# Uninstalling existing Docker, Kubernetes
-echo "Uninstalling Docker,Kubernetes"
-kubeadm reset -f
-apt-get -y remove docker.io containerd
-sudo apt-get -y purge kubeadm kubectl kubelet kubernetes-cni kube* containerd
-sudo apt-get -y autoremove
-sudo rm -rf ~/.kube
-apt-get -y autoremove
-
 
 # Step x: Edit /etc/sysctl.conf to add fs.inotify.max_user_watches and fs.inotify.max_user_instances. This shoudl be done before containerd installation
 echo "==========================================================="
